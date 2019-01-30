@@ -89,7 +89,7 @@
               </ul>
           </div>
           <div class="card-footer">
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+            <button id="select1" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
         <div class="card mb-3 box-shadow">
@@ -105,7 +105,7 @@
             </ul>
           </div>
           <div class="card-footer">
-              <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+              <button id="select2" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
         <div class="card mb-3 box-shadow">
@@ -122,7 +122,7 @@
             </ul>
           </div>
           <div class="card-footer">
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+            <button id="select3" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
         <div class="card mb-3 box-shadow">
@@ -210,7 +210,7 @@
       });
       var users = 2;
       var projects = 5;
-      var pageviews = 10000;
+      var pageviews = 5000;
       var priceUser = 10;
       var priceProject = 10;
       var pricePageview = 0.001;
@@ -236,6 +236,7 @@
         projects: 10000000, // unlimited
         pageviews: 10000000 // unlimited
       }];
+      var selectedPackage = -1;
 
       function updateUnitPrice() {
         $("#priceUser").text(priceUser);
@@ -285,6 +286,12 @@
             bestPackage = index;
             price = total;
           }
+        }
+
+        // use selected package
+        if (selectedPackage >= 0 ){
+          bestPackage = selectedPackage;
+          price = packagePrice[bestPackage];
         }
 
         $("#price").text(price);
@@ -373,6 +380,37 @@
       $("#pricePageview").on("change", function() {
         pricePageview = $(this).val();
         updateUnitPrice();
+      });
+
+      $("#select1").on("click", function() {
+        $(".card-footer .btn-outline-primary").text("Select");
+        if (selectedPackage === 0) {
+          selectedPackage = -1;
+        } else {
+          $("#select1").text("Unselect");
+          selectedPackage = 0;
+        }
+        updatePrice();
+      });
+      $("#select2").on("click", function() {
+        $(".card-footer .btn-outline-primary").text("Select");
+        if (selectedPackage === 1) {
+          selectedPackage = -1;
+        } else {
+          $("#select2").text("Unselect");
+          selectedPackage = 1;
+        }
+        updatePrice();
+      });
+      $("#select3").on("click", function() {
+        $(".card-footer .btn-outline-primary").text("Select");
+        if (selectedPackage === 2) {
+          selectedPackage = -1;
+        } else {
+          $("#select3").text("Unselect");
+          selectedPackage = 2;
+        }
+        updatePrice();
       });
 
       $("#ex6").slider({
