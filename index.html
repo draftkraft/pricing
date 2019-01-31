@@ -76,56 +76,62 @@
 
     <div class="container-fluid">
       <div class="card-deck mb-4 text-center">
-        <div class="card mb-3 box-shadow">
+        <div id="card1" class="card mb-3 box-shadow">
           <div class="card-header">
             <h4 class="my-0 font-weight-normal">Option 1</h4>
           </div>
           <div id="package1" class="card-body">
             <h1 class="card-title pricing-card-title"><span id="packagePrice1"></span> <small>/ mo</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
-                <li><span class='users'>0</span> users included</li>
-                <li><span class='projects'>0</span> projects</li>
-                <li><span class='pageviews'>0</span> pageviews</li>
-              </ul>
-          </div>
+              <li><span class='users'>0</span> users</li>
+              <li><span class='projects'>0</span> active projects</li>
+              <li><span class='pageviews'>0</span> pageviews</li>
+            </ul>
+            <ul class="features list-unstyled mt-3 mb-4">
+            </ul>
+            </div>
           <div class="card-footer">
             <button id="select1" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
-        <div class="card mb-3 box-shadow">
+        <div id="card2" class="card mb-3 box-shadow">
           <div class="card-header">
             <h4 class="my-0 font-weight-normal">Option 2</h4>
           </div>
           <div id="package2" class="card-body">
             <h1 class="card-title pricing-card-title"><span id="packagePrice2"></span> <small>/ mo</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
-              <li><span class='users'>0</span> users included</li>
-              <li><span class='projects'>0</span> projects</li>
+              <li><span class='users'>0</span> users</li>
+              <li><span class='projects'>0</span> active projects</li>
               <li><span class='pageviews'>0</span> pageviews</li>
             </ul>
-          </div>
+            <ul class="features list-unstyled mt-3 mb-4">
+              </ul>
+            </div>
           <div class="card-footer">
               <button id="select2" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
-        <div class="card mb-3 box-shadow">
+        <div id="card3" class="card mb-3 box-shadow">
           <div class="card-header">
             <h4 class="my-0 font-weight-normal">Option 3</h4>
           </div>
           <div id="package3" class="card-body bg-success text-white">
             <h1 class="card-title pricing-card-title"><span id="packagePrice3"></span> <small>/ mo</small></h1>
             <ul class="list-unstyled mt-3 mb-4">
-                <li><span class='users'>0</span> users included</li>
-                <li><span class='projects'>0</span> projects</li>
+                <li><span class='users'>0</span> users</li>
+                <li><span class='projects'>0</span> active projects</li>
                 <li><span class='pageviews'>0</span> pageviews</li>
                 <li>custom branding</li>
             </ul>
-          </div>
+            <ul class="features list-unstyled mt-3 mb-4">
+            </ul>
+            </div>
           <div class="card-footer">
             <button id="select3" type="button" class="btn btn-lg btn-block btn-outline-primary">Select</button>
           </div>
         </div>
-        <div class="card mb-3 box-shadow">
+        <div id="card4" class="card mb-3 box-shadow">
           <div class="card-header">
             <h4 class="my-0 font-weight-normal">Option 4</h4>
           </div>
@@ -135,8 +141,9 @@
               <li>unlimited users</li>
               <li>unlimited projects</li>
               <li>unlimited pageviews</li>
-              <li>custom branding</li>
-              <li>custom contracts</li>
+            </ul>
+            <ul class="features list-unstyled mt-3 mb-4">
+              <li>all features</li>
             </ul>
           </div>
           <div class="card-footer">
@@ -239,12 +246,6 @@
       var selectedPackage = -1;
 
       function updateUnitPrice() {
-        $("#priceUser").text(priceUser);
-        $("#priceProject").text(priceProject);
-        $("#pricePageview").text(pricePageview);
-        $("#packagePrice1").text(packages[0].price);
-        $("#packagePrice2").text(packages[1].price);
-        $("#packagePrice3").text(packages[2].price);
         updatePrice();
       }
 
@@ -271,14 +272,17 @@
         for (let index = 0; index < 3; index++) {
           let p = packages[index];
           let total = p.price;
+          let packagePriceUser = p.priceUser || priceUser;
+          let packagePriceProject = p.priceProject || priceProject;
+          let packagePricePageview = p.pricePageview || pricePageview;
           if ( p.users < users) {
-            total += (users - p.users) * priceUser;
+            total += (users - p.users) * packagePriceUser;
           }
           if ( p.projects < projects) {
-            total += (projects - p.projects) * priceProject;
+            total += (projects - p.projects) * packagePriceProject;
           }
           if ( p.pageviews < pageviews) {
-            total += (pageviews - p.pageviews) * pricePageview;
+            total += (pageviews - p.pageviews) * packagePricePageview;
           }
           packagePrice[index] = total;
 
@@ -294,6 +298,19 @@
           price = packagePrice[bestPackage];
         }
 
+        $("#priceUser").text(priceUser);
+        $("#priceProject").text(priceProject);
+        $("#pricePageview").text(pricePageview);
+        if (packages[bestPackage].priceUser) {
+            $("#priceUser").text(packages[bestPackage].priceUser);
+        }
+        if (packages[bestPackage].priceProject) {
+            $("#priceProject").text(packages[bestPackage].priceProject);
+        }
+        if (packages[bestPackage].pricePageview) {
+            $("#pricePageview").text(packages[bestPackage].pricePageview);
+        }
+
         $("#price").text(price);
         $('.card-body').removeClass("bg-success text-white");
         $('#package' + (bestPackage + 1) + '.card-body').addClass("bg-success text-white");
@@ -307,10 +324,31 @@
       }
 
       function updatePackages() {
+        $("#packagePrice1").text(packages[0].price);
+        $("#packagePrice2").text(packages[1].price);
+        $("#packagePrice3").text(packages[2].price);
+
         for (let index = 0; index < 3; index++) {
-          $("#package" + (index + 1) + " .users" ).text(formatNumber(packages[index].users));
-          $("#package" + (index + 1) + " .projects" ).text(formatNumber(packages[index].projects));
-          $("#package" + (index + 1) + " .pageviews" ).text(formatNumber(packages[index].pageviews));
+          let p = packages[index];
+          $("#card" + (index + 1) + "" ).toggle(!p.hide);
+          $("#package" + (index + 1) + " .features li" ).remove();
+          if (p.priceUser) {
+            $("#package" + (index + 1) + " .features" ).append("<li> $" + p.priceUser + " per user</li>");
+          }
+          if (p.priceProject) {
+            $("#package" + (index + 1) + " .features" ).append("<li> $" + p.priceProject + " per project</li>");
+          }
+          if (p.pricePageview) {
+            $("#package" + (index + 1) + " .features" ).append("<li> $" + p.pricePageview + " per page view</li>");
+          }
+          if (p.features && Array.isArray(p.features)) {
+            p.features.forEach(function(feature) {
+              $("#package" + (index + 1) + " .features" ).append("<li>" + feature + "</li>");
+            });
+          }
+          $("#package" + (index + 1) + " .users" ).text(formatNumber(p.users));
+          $("#package" + (index + 1) + " .projects" ).text(formatNumber(p.projects));
+          $("#package" + (index + 1) + " .pageviews" ).text(formatNumber(p.pageviews));
         }
       }
 
@@ -340,7 +378,6 @@
         if (config.packages && Array.isArray(config.packages)) {
           packages = config.packages;
         }
-        updateUnitPrice();
         updatePackages();
       }
 
@@ -368,18 +405,6 @@
         } catch (error) {
           alert(error);
         }
-      });
-      $("#priceUser").on("change", function() {
-        priceUser = $(this).val();
-        updateUnitPrice();
-      });
-      $("#priceProject").on("change", function() {
-        priceProject = $(this).val();
-        updateUnitPrice();
-      });      
-      $("#pricePageview").on("change", function() {
-        pricePageview = $(this).val();
-        updateUnitPrice();
       });
 
       $("#select1").on("click", function() {
@@ -453,7 +478,6 @@
       $("#ex7SliderVal").text(projects);
       $("#ex8SliderVal").text(pageviews);
       
-      updateUnitPrice();
       updatePackages();
       updatePrice();
       writeConfig();
