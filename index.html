@@ -30,7 +30,7 @@
     </div>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 class="display-4">Pricing</h1>
+      <h1 id="name" class="display-4">Pricing</h1>
       <p class="lead">Amazing new pricing model for Usersnap.</p>
       <div class="container">
         <div class="row">
@@ -69,7 +69,7 @@
       </div>
       <p>&nbsp;</p>
       <h1>
-        <span id="priceLabel"> Price: <span id="price">0</span></span></p>
+        <span id="priceLabel"> Best Price: <span id="price">0</span></span></p>
       </h1>
     
     </div>
@@ -214,6 +214,7 @@
         fg: '#eceeef',
         text: 'Thumbnail'
       });
+      var name = 'Pricing Demo';
       var users = 0;
       var projects = 0;
       var pageviews = 0;
@@ -297,6 +298,7 @@
           price = packagePrice[bestPackage];
         }
 
+        $("#name").text(name);
         $("#priceUser").text(priceUser);
         $("#priceProject").text(priceProject);
         $("#pricePageview").text(pricePageview);
@@ -364,6 +366,9 @@
       function readConfig(config) {
         if (!config) {
           return;
+        }
+        if (config.name) {
+          name = config.name;
         }
         if (config.priceUser) {
           priceUser = config.priceUser;
